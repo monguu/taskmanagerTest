@@ -47,6 +47,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -59,7 +60,19 @@ export default {
     };
   },
   methods: {
-    onSubmit() {},
+    async onSubmit() {
+      try {
+        await axios.post("http://localhost:3000/auth/signup", {
+          email: this.form.email,
+          password: this.form.password,
+          name: this.form.name,
+        });
+
+        this.$router.push({ path: "/login" });
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
 };
 </script>

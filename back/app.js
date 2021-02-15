@@ -5,16 +5,18 @@ const bodyParser = require("body-parser");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const User = require("./models/user");
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 app.post(
   "/auth/signup",
   [
-    // postman post
+    // postman post validator
     body("email")
       .isEmail()
       .withMessage("Please type valid email")
@@ -30,7 +32,11 @@ app.post(
       .trim()
       .isLength({ min: 6 })
       .withMessage("Password must be greater than 6 characters"),
-    body("name").trim().not().isEmpty().withMessage("name field is  required"),
+    body("name")
+      .trim()
+      .not()
+      .isEmpty()
+      .withMessage("name field is  required"),
   ],
   // 에러가 생긴 경우를 만듬
   async (req, res, next) => {
@@ -56,11 +62,11 @@ app.post(
         password: hashedPassword,
         name,
       });
-      // 유저 생성
+      // 유저 생성 저장
       const result = await user.save();
       res.status(201).json({
         message: "User created",
-        user: result,
+        userId: result.Id,
       });
     } catch (err) {
       if (!err.statusCode) {
