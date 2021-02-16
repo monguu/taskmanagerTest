@@ -1,6 +1,11 @@
 <template>
   <div class="mt-3">
     <b-form @submit.prevent="onSubmit">
+      <ValidationProvider
+      name="Name"
+        rules="required"
+        v-slot="{ errors }"
+      >
       <b-form-group label="Name:">
         <b-form-input
           v-model="form.name"
@@ -8,7 +13,14 @@
           placeholder="Enter Name"
           required
         ></b-form-input>
+      <FormError :errors="errors" />
       </b-form-group>
+      </ValidationProvider>
+      <ValidationProvider
+      name="email"
+        rules="required|email"
+        v-slot="{ errors }"
+      >
       <b-form-group label="Email address:">
         <b-form-input
           v-model="form.email"
@@ -16,7 +28,14 @@
           placeholder="Enter email"
           required
         ></b-form-input>
+       <FormError :errors="errors" />
       </b-form-group>
+      </ValidationProvider>
+       <ValidationProvider
+      name="password"
+        rules="required|min:6"
+        v-slot="{ errors }"
+      >
       <b-form-group label="Your Password:">
         <b-form-input
           type="password"
@@ -24,7 +43,14 @@
           placeholder="Enter Password"
           required
         ></b-form-input>
+       <FormError  :errors="errors"/>
       </b-form-group>
+      </ValidationProvider>
+      <ValidationProvider
+      name="passwordConfirm"
+        rules="required|min:6"
+        v-slot="{ errors }"
+      >
       <b-form-group label="confirm Password:">
         <b-form-input
           type="password"
@@ -32,7 +58,9 @@
           placeholder="Enter Password"
           required
         ></b-form-input>
+      <FormError :errors="errors" />
       </b-form-group>
+      </ValidationProvider>
 
       <b-form-group id="input-group-4" v-slot="{ ariaDescribedby }">
         <b-form-checkbox-group
@@ -47,8 +75,15 @@
   </div>
 </template>
 <script>
+import { ValidationProvider } from 'vee-validate';
 import axios from "axios";
+import FormError from "@/components/FormError.vue"
 export default {
+  components: {
+    ValidationProvider,
+    FormError
+    ,
+  },
   data() {
     return {
       form: {
